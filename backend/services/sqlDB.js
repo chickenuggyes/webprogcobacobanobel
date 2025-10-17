@@ -37,11 +37,10 @@ export const dbService = {
     await db.query("DELETE FROM items");
     for (const item of data) {
       await db.query(
-        "INSERT INTO items (id, namaItem, quantity, keterangan, hargaSatuan, stok) VALUES (?, ?, ?, ?, ?, ?)",
+        "INSERT INTO items (id, namaItem, keterangan, hargaSatuan, stok) VALUES (?, ?, ?, ?, ?)",
         [
           item.id,
           item.namaItem,
-          item.quantity,
           item.keterangan,
           item.hargaSatuan,
           item.stok
