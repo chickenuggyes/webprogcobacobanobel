@@ -1,4 +1,5 @@
-const API = "http://localhost:3000";
+const API = window.location.origin;
+
 
 document.getElementById("addProductForm").addEventListener("submit", async (e) => {
   e.preventDefault();
