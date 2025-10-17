@@ -1,4 +1,5 @@
-const API = "http://localhost:3000"; // ganti saat deploy
+const API = window.location.origin;
+
 
 const grid   = document.getElementById("grid");
 const search = document.getElementById("searchInput");
