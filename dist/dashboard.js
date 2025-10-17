@@ -6,7 +6,8 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   const listEl = document.getElementById("listProducts");
 
-  const API = "http://localhost:3000";
+  const API = window.location.origin;
+vvvvvvvvvv
   const rupiah = (n) =>
     new Intl.NumberFormat("id-ID", {
       style: "currency",
