@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "build": "npx --yes tailwindcss -i ./src/input.css -o ./dist/style.css --minify",
-    "start": "node backend/server.js",
-    "dev": "nodemon backend/server.js"
-  },
+  "build": "node -e \"console.log('skip build on Railway')\"",
+  "start": "node backend/server.js",
+  "dev": "nodemon backend/server.js"
+}
+,
   "dependencies": {
     "@tailwindcss/cli": "^4.1.13",
     "cors": "^2.8.5",
