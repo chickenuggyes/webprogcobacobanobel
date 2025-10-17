@@ -3,11 +3,10 @@ window.addEventListener("DOMContentLoaded", async () => {
   const elStok  = document.getElementById("totalStok");
   const elHarga = document.getElementById("totalHarga");
   const elError = document.getElementById("dashboardError");
+  const listEl  = document.getElementById("listProducts");
 
-  const listEl = document.getElementById("listProducts");
+  const API = window.location.origin; // same-origin
 
-  const API = window.location.origin;
-vvvvvvvvvv
   const rupiah = (n) =>
     new Intl.NumberFormat("id-ID", {
       style: "currency",
@@ -21,7 +20,8 @@ vvvvvvvvvv
   function resolveImg(p) {
     if (!p?.foto) return FALLBACK_IMG;
     if (/^https?:\/\//i.test(p.foto)) return p.foto;
-    return `${API}${p.foto}`;
+    // pastikan selalu absolute ke origin
+    return new URL(p.foto.replace(/^\/?/, "/"), API).href; // contoh: /uploads/xxx.jpg
   }
 
   function itemRow(p) {
@@ -37,15 +37,16 @@ vvvvvvvvvv
   }
 
   async function getJSON(url) {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`${res.status} ${res.statusText} — ${url}`);
-    return res.json();
+    const res = await fetch(url, { headers: { Accept: "application/json" } });
+    const ct = res.headers.get("content-type") || "";
+    let data = null;
+    if (ct.includes("application/json")) data = await res.json().catch(() => null);
+    if (!res.ok) throw new Error((data && data.message) || `HTTP ${res.status} — ${url}`);
+    return data ?? {};
   }
 
-  let cachedItems = [];                 
-  let dashCache   = {                 
-    totalItem: 0, totalStok: 0, totalHarga: 0
-  };
+  let cachedItems = [];
+  let dashCache = { totalItem: 0, totalStok: 0, totalHarga: 0 };
 
   try {
     const [dash, itemsRes] = await Promise.all([
@@ -79,9 +80,9 @@ vvvvvvvvvv
   }
 
   function fillPrintSummary(dash) {
-    const pItem   = document.getElementById('pTotalItem');
-    const pStok   = document.getElementById('pTotalStok');
-    const pHarga  = document.getElementById('pTotalHarga');
+    const pItem  = document.getElementById("pTotalItem");
+    const pStok  = document.getElementById("pTotalStok");
+    const pHarga = document.getElementById("pTotalHarga");
     if (pItem)  pItem.textContent  = dash.totalItem;
     if (pStok)  pStok.textContent  = dash.totalStok;
     if (pHarga) pHarga.textContent = rupiah(dash.totalHarga);
